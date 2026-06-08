@@ -50,7 +50,7 @@ ruleStart = rule "start"
                     []
                     (seqs [ "n" .<. int 0,
                             call "digit" [g] ["n"],
-                            call "buildSeq" [g,v "n"] [v "e"],
+                            call "buildSeq" [g,v "n"] ["e"],
                             lit "[",
                             lit "]"
                            ])
@@ -60,10 +60,9 @@ ruleBuildSeq = rule "buildSeq"
                         ["g" .:: tLang, "n" .:: tInt]
                         [v "e" .:: tMAPeg]
                           ( "e" .<.  aX lowLetterMeta .:.
-                            start (seqs [((int 1) |<| (v "n")) |?| ("e" .<. aX ((v "e") |:| aX lowLetterMeta)),
-                                        "n" .<. ((v "n") |-| (int 1)) ]) .:.
-
-                            )
+                            star (seqs [((int 1) |<| (v "n")) |?| ("e" .<. aX ((v "e") |:| aX lowLetterMeta)),
+                                        "n" .<. ((v "n") |-| (int 1)) ])
+                          )
 
 ruleLetters :: ApegRule
 ruleLetters = rule "letters" ["g" .:: tLang] [] (npred lam)

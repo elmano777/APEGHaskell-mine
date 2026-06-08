@@ -54,6 +54,9 @@ ruleStart = rule "start"
 
 
 
+ruleLetters :: ApegRule
+ruleLetters = rule "letters" ["g" .:: tLang] [] lowLetter
+
 ruleDigit :: ApegRule
 ruleDigit = rule "digit"
                       ["g" .:: tLang]
