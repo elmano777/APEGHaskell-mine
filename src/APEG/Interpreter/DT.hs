@@ -47,7 +47,13 @@ nodeName (DTN s _ _) = s
  
 textTree :: String -> [DT a] -> [String]
 textTree prfx []     = [] 
-textTree prfx  [n]   = [prfx ++ "\x2514\x2500 " ++ (nodeName n)]
+-- Último hijo (rama "└─"): no quedan hermanos, así que la continuación
+-- usa espacios. Si es un no-terminal, hay que SEGUIR bajando a sus hijos
+-- (antes solo se imprimía el nombre y se truncaba el subárbol).
+textTree prfx  [DTT _ s]    = [prfx ++ "\x2514\x2500 " ++ (warpChar s)]
+textTree prfx  [DTN s _ ys] = (prfx ++ "\x2514\x2500 " ++ (warpChar s)) : (textTree (prfx ++ "   ") ys)
+textTree prfx  [DTNIL]      = []
+-- Hijo intermedio (rama "├─"): la continuación lleva "│" porque hay hermanos.
 textTree prfx ((DTT _ s):xs) = (prfx ++ "\x251c\x2500 " ++ (warpChar s))  :  (textTree prfx xs)
 textTree prfx ((DTN s _ ys):xs) = (prfx ++ "\x251c\x2500 " ++ (warpChar s))  : (textTree (prfx ++ "\x2502  ") ys) ++ (textTree prfx xs)
 
